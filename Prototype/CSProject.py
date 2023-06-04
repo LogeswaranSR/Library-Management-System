@@ -329,7 +329,7 @@ def returnbook(cursor,lgtp):#Function to return a book
 #_main_ program
 import time
 import mysql.connector as sqltor
-mycon=sqltor.connect(host='localhost',user='root',passwd='14061703')
+mycon=sqltor.connect(host='localhost',user='root',passwd='********')
 csr=mycon.cursor()
 while True:
     print("""

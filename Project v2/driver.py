@@ -12,7 +12,7 @@ import table as tb
 import account as ac
 import lmsfunctions as lms
 
-mycon=sqltor.connect(host='localhost',user='root',passwd='14061703')
+mycon=sqltor.connect(host='localhost',user='root',passwd='********')
 csr=mycon.cursor()
 while True:
     print("""

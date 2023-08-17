@@ -1,5 +1,5 @@
 import mysql.connector as sqltor
-mycon=sqltor.connect(host='localhost',user='root',passwd='********')
+mycon=sqltor.connect(host='localhost',user='root',passwd='14061703')
 myfile=open(r'data.txt','r')
 if mycon.is_connected():
     print("Connection SUCCESS")

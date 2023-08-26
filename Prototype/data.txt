@@ -3,12 +3,12 @@ create database if not exists loginid;
 use loginid;
 create table if not exists emplgnid(NAME varchar(50),EMAILID varchar(50),USRNM varchar(15) UNIQUE,PSSWD varchar(30) UNIQUE);
 create table if not exists mbrlgnid(NAME varchar(50),EMAILID varchar(50),USRNM varchar(15) UNIQUE,PSSWD varchar(30) UNIQUE)
-insert into emplgnid values('abcd','abcdefghi@jmail.com','14S4007','abcd@2004');
-insert into mbrlgnid values('abcd','abcd@efgh.com','19S1156','abcd2004');
-insert into emplgnid values('lmno','asdfghjkl@zxcvbmail.com','19S1111','lmnopqrs');
-insert into mbrlgnid values('lmno','qwertyuiop@asdfgmail.com','19s1111','LMNOPQRS');
-insert into emplgnid values('wxyz','klmnopqr@stuvw.com','19S1130','wxyz2002');
-insert into mbrlgnid values('wxyz','zxcvbnm@yahoo.co.in','19s1130','wxyz@2002');
+insert into emplgnid values('Logeswaran.SR','abcdefghi@jmail.com','14S4007','logessr04');
+insert into mbrlgnid values('Logeswaran.SR','mpv19ha035@sairamvidyalaya.edu.in','19S1156','loges2004');
+insert into emplgnid values('Mohammed Abdullah Khan.B','asdfghjkl@zxcvbmail.com','19S1111','abdullah');
+insert into mbrlgnid values('Mohammed Abdullah Khan.B','qwertyuiop@asdfgmail.com','19s1111','Abdullah');
+insert into emplgnid values('Nitish Subramani.P.S','klmnopqr@stuvw.com','19S1130','nitish2002');
+insert into mbrlgnid values('Nitish Subramani.P.S','zxcvbnm@yahoo.co.in','19s1130','Nitish@02');
 use library;
 create table if not exists BOOK(BCODE varchar(15) UNIQUE,BNAME varchar(40) UNIQUE,AUTHOR varchar(40),PUBL varchar(40),PRICE int(4),SLF char(3));
 create table if not exists copies(BCODE varchar(15) UNIQUE,TCP int(3),ACP int(3),CHECK (ACP<=TCP));

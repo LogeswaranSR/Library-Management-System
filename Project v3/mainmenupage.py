@@ -9,13 +9,12 @@ from tkinter import Button, Label, LabelFrame
 import tkinter as tkt
 
 class MainMenuPage:
-    def __init__(self, csr, ui, db):
+    def __init__(self, ui, db):
         self.root=tkt.Tk()
         self.ui=ui
         self.db=db
-        self.csr=csr
         
-    def declare(self):
+    def declare(self, lst):
         self.Label=Label(self.root, text="Main Page")
         self.frame=LabelFrame(self.root)
         self.ChangeADButton=Button(self.root, text="Change Account Details")

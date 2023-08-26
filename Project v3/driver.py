@@ -12,53 +12,25 @@ import lmstable as tb
 import sys
 import account as ac
 import lmsfunctions as lms
+import mainmenupage as mp
 import loginpage as lp
 import basicclasses as bc
 
-mycon=sqltor.connect(host='localhost',user='root',passwd='14061703')
-csr=mycon.cursor()
-sample=lp.LoginPage(csr, mycon)
-csr.execute('Use loginid;')
+logindb=bc.Database(host='localhost',user='root',passwd='14061703', database='loginid')
+sample=lp.LoginPage(logindb)
 #Login process
 sample.initialize()
 details=sample.start()
 if not details[0]:
     print(details)
-    mycon.close()
+    del logindb
     sys.exit()
 ui=bc.User(details[1], details[2], details[3])
-csr.execute('Use library')
+librarydb=bc.Database(host='localhost',user='root',passwd='14061703', database='library')
 #Member login 
-if ui.lgtp==1:
-    time.sleep(1)
-    while True:
-        time.sleep(2)
-        print(ui.mainpage)#Homepage for Member account
-        time.sleep(1)
-        choice=int(input("Enter your CHOICE:"))
-        print()
-        if choice==1:
-            lms.selectfn(csr,'book b,copies c')
-        elif choice==2:
-            lms.lendbook(csr,mycon,ui.lgtp)
-        elif choice==3:
-            bcd=input("Enter the Book Code:")
-            time.sleep(3)
-            print('Book renewed')
-            time.sleep(1)
-            print("Submission Date extended for 10 more days")
-        elif choice==4:
-            lms.returnbook(csr,mycon,ui.lgtp)
-        elif choice==5:
-            ac.changeaccdet(csr,mycon,ui.lgtp,ui.lgid,'R')
-        elif choice==6:
-            ac.changeaccdet(csr,mycon,ui.lgtp,ui.lgid,'P')
-        elif choice==0:
-            break
-        else:
-            print('Invalid choice')
-            print("Try again")
-        time.sleep(3)
+mainpage=mp.MainMenuPage(ui, librarydb)
+mainpage.declare([])
+mainpage.initialize()
 #Employee Login
 if ui.lgtp==2:
     time.sleep(1)

@@ -43,40 +43,35 @@ def insertbookdata(db, bname, aname, bcode, publ, price, sfcde, cps, avblcps):
     try:
         cmd='insert into book values(\'{0}\',\'{1}\',\'{2}\',\'{3}\',{4},\'{5}\');'.format(bcode,bname,aname,publ,price,sfcde)
         cmd2='insert into copies values(\'{0}\',{1},{2});'.format(bcode,cps,avblcps)
-        db.cursor.execute(cmd)
-        db.mycon.commit()
-        db.cursor.execute(cmd2)
-        db.mycon.commit()
+        db.execute(cmd)
+        db.execute(cmd2)
         return True
     except:
         return False
 
-def changedata(cursor, mycon):
+def changedata(db):
     '''Function to change data regarding books'''
     tname=input('Enter the Table Name(Book,Copies,Genrecode):')
     code=input("Enter the Book Code/Genre Code(First 3 Numbers of Book Code):")
     cmd1='select * from {0} where BCODE=\'{1}\';'.format(tname,code)
-    cursor.execute(cmd1)
-    data1=cursor.fetchall()
+    data1=db.get(cmd1)
     if data1!=None:
         print('Data:')
-        tb.tabledisplay(data1,cursor,tname)
+        tb.tabledisplay(data1,db.csr,tname)
         cname=input("Enter the column name to be changed:")
         value=input("Enter the new data:")
         cmd2='update {0} set {1}=\'{2}\' where BCODE=\'{3}\';'.format(tname,cname,value,code)
-        cursor.execute(cmd2)
-        mycon.commit()
+        db.execute(cmd2)
         print("Record Updated!\n")
     else:
         print("Data not Found\n")
-def lendbook(cursor, mycon, lgtp):
+def lendbook(db, lgtp):
     '''Function to lend a book'''
     if lgtp=='M':
         bcode=input("Enter the code of the book you want to borrow:")
         cmd='update copies set ACP=ACP-1 where BCODE=\'{0}\';'.format(bcode)
         try:
-            cursor.execute(cmd)
-            mycon.commit()
+            db.execute(cmd)
             time.sleep(1)
             print("Request Sent to the Reception")
             time.sleep(1)
@@ -86,13 +81,12 @@ def lendbook(cursor, mycon, lgtp):
             print("Book of the given code doesn't exist in this Library")
             print("Try Again\n")
             time.sleep(1)
-            lendbook(cursor,lgtp)
+            lendbook(db,lgtp)
     if lgtp=='E':
         bcode=input("Enter the code of the book to be lended:")
         cmd='update copies set ACP=ACP-1 where BCODE=\'{0}\';'.format(bcode)
         try:
-            cursor.execute(cmd)
-            mycon.commit()
+            db.execute(cmd)
             time.sleep(1)
             print("Database Updated")
             time.sleep(1)
@@ -102,15 +96,14 @@ def lendbook(cursor, mycon, lgtp):
             print("Book of the given code doesn't exist in this Library")
             print("Try Again\n")
             time.sleep(1)
-            lendbook(cursor,lgtp)
-def returnbook(cursor, mycon, lgtp):
+            lendbook(db,lgtp)
+def returnbook(db, lgtp):
     '''Function to return a book'''
     if lgtp=='E':
         bcode=input("Enter the Book code:")
         cmd='update copies set ACP=ACP+1 where BCODE=\'{0}\';'.format(bcode)
         try:
-            cursor.execute(cmd)
-            mycon.commit()
+            db.execute(cmd)
             time.sleep(1)
             print("Database Updated")
             time.sleep(1)
@@ -120,13 +113,12 @@ def returnbook(cursor, mycon, lgtp):
             print("Book of the given code doesn't exist in this Library")
             print("Try Again\n")
             time.sleep(1)
-            returnbook(cursor,lgtp)
+            returnbook(db,lgtp)
     if lgtp=='M':
         bcode=input("Enter the Book Code:")
         cmd='update copies set ACP=ACP+1 where BCODE=\'{0}\';'.format(bcode)
         try:
-            cursor.execute(cmd)
-            mycon.commit()
+            db.execute(cmd)
             time.sleep(1)
             print("Request Sent to the Reception")
             time.sleep(1)
@@ -136,4 +128,4 @@ def returnbook(cursor, mycon, lgtp):
             print("Book of the given code doesn't exist in this Library")
             print("Try Again\n")
             time.sleep(1)
-            returnbook(cursor,lgtp)
+            returnbook(db,lgtp)

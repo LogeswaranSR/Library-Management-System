@@ -11,24 +11,6 @@ import tkinter as tkt
 
 class Database:
     def __init__(self, host, user, passwd, database):
-        '''
-
-        Parameters
-        ----------
-        host : str
-            DESCRIPTION.
-        user : str
-            DESCRIPTION.
-        passwd : str
-            DESCRIPTION.
-        database : str
-            DESCRIPTION.
-
-        Returns
-        -------
-        None.
-
-        '''
         self.conn=sqltor.connect(host=host,user=user,passwd=passwd,database=database)
         self.csr=self.conn.cursor()
         self.db=database
@@ -37,8 +19,7 @@ class Database:
         '''Function to get name of the table columns'''
         try:
             cmd='desc '+table+';'
-            self.csr.execute(cmd)
-            data=self.csr.fetchall()
+            data=self.get(cmd)
             data1=[]
             data2=[]
             for row in data:
@@ -51,11 +32,10 @@ class Database:
     def tblaccess(self,tblnm,condn=None,cname='*'):
         '''Function to get resultset from Mysql'''
         if condn==None:
-            str='select {0} from {1};'.format(cname,tblnm)
+            cmd='select {0} from {1};'.format(cname,tblnm)
         else:
-            str='select {0} from {1} where {2};'.format(cname,tblnm,condn)
-        self.csr.execute(str)
-        tbl=self.csr.fetchall()
+            cmd='select {0} from {1} where {2};'.format(cname,tblnm,condn)
+        tbl=self.get(cmd)
         return tbl
     
     def close(self):
@@ -63,6 +43,14 @@ class Database:
         
     def __del__(self):
         self.close()
+        
+    def execute(self, command):
+        self.csr.execute(command)
+        self.conn.commit()
+        
+    def get(self, command):
+        self.execute(command)
+        return self.csr.fetchall()
         
 class User:
     def __init__(self, name, lgid, type):

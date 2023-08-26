@@ -16,6 +16,7 @@ class SearchBookPage:
         self.db=db
         self.clmn=tkt.IntVar()
         
+    def declare(self):
         self.greeting=Label(self.root, text="Search a Book")
         self.f1=LabelFrame(self.root, text="Select any of the fields below")
         self.f2=LabelFrame(self.root)
@@ -60,6 +61,8 @@ class InsertBookPage:
     def __init__(self, root, db):
         self.root=root
         self.db=db
+        
+    def declare(self):
         self.greeting=Label(self.root, text="Insert a Book")
         self.frame=LabelFrame(self.root)
         
@@ -114,12 +117,18 @@ class InsertBookPage:
         
         
 class ChangeBookInfoPage:
-    def __init__(self, root, csr):
+    def __init__(self, root, db):
         self.root=root
+        self.db=db
+        
+    def declare(self):
+        self.greeting=Label(self.root, text="Enter book name")
+    
         
 class LendReturnBookPage:
-    def __init__(self, root, csr):
+    def __init__(self, root, db):
         self.root=root
+        self.db=db
         
 if __name__=='__main__':
     from basicclasses import Database

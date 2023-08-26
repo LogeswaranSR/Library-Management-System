@@ -13,11 +13,10 @@ from account import login
 
 class LoginPage:
     n=0
-    def __init__(self, cursor, mycon):
+    def __init__(self, db):
         self.root=Tk()
         # root.geometry("1920x1080+0+0")
-        self.csr=cursor
-        self.conn=mycon
+        self.db=db
         self.root.title("Login Page")
         self.frame=LabelFrame(self.root, text="Login Details")
         self.logintype=tkt.IntVar()
@@ -41,7 +40,7 @@ class LoginPage:
         self.username=self.usrnm.get()
         password=self.psswd.get()
         lgtp=self.logintype.get()
-        self.loggedin, self.name, LoginPage.n = login(self.username, password, lgtp, self.csr, LoginPage.n)
+        self.loggedin, self.name, LoginPage.n = login(self.username, password, lgtp, self.db.csr, LoginPage.n)
         if self.loggedin:
             self.status.grid_forget()
             self.status=Label(self.root, text="Login Success\n Redirecting")
@@ -85,7 +84,7 @@ class LoginPage:
         
     def caprocess(self):
         top=tkt.Toplevel()
-        cna=CNAPage(top, self.csr, self.conn)
+        cna=CNAPage(top, self.db)
         cna.initialize()
         cna.start()
         

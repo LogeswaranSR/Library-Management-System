@@ -1,71 +1,55 @@
 import time
-import table as tb
+import lmstable as tb
 
-def selectfn(csr,tbl):
+def selectfn(db, tbl, clmn, value):
     '''Function to search a book'''
     inpt='b.bcode,bname,author,publ,price,slf,tcp,acp'
-    print()
-    time.sleep(1)
-    clmn=int(input('''How do you like to search the book?
-1:Book Name
-2:Book Code
-3:Publisher
-4:Genre
-Enter your Choice:'''))
     condn1='b.bcode=c.bcode and '
+    printstr=None
     if clmn==1:
         c='Name'
-        bname=input("Enter the Book Name:")
-        condn1+='BNAME=\'{0}\''.format(bname)
+        condn1+='BNAME=\'{0}\''.format(value)
     if clmn==2:
         c='Code'
-        bcode=input("Enter the Book Code:")
-        condn1+='b.BCODE=\'{0}\''.format(bcode)
+        condn1+='b.BCODE=\'{0}\''.format(value)
     if clmn==3:
         c='Publisher'
-        publ=input("Enter the Publishers of the Book:")
-        condn1+='PUBL LIKE \'%{0}%\''.format(publ)
+        condn1+='PUBL LIKE \'%{0}%\''.format(value)
     if clmn==4:
         c='Genre'
-        gnre=input("Enter the Genre:")
+        gnre=value
         condn2='GENRE=\'{0}\''.format(gnre)
         tbl1='GENRECODE'
-        data1=tb.tblaccess(csr,tbl1,condn2,'*')
+        data1=db.tblaccess(tbl1,condn2,'*')
         if data1==[]:
-            print('Book of that Genre is not Found')
+            printstr='Book of that Genre is not Found'
         else:
             condn1+='b.BCODE LIKE \'{0}%\''.format(data1[0][0])
-    print()
-    try:
-        data=tb.tblaccess(csr,tbl,condn1,inpt)
-        if data==[]:
-            st='Book of that {0} is not found'.format(c)
-            print(st)
-        else:
-            tbl=['book','copies']
-            tb.tabledisplay(data,csr,tbl)
-    except:
-        pass
-def insertbookdata(cursor, mycon):
+    if printstr==None:
+        try:
+            data=db.tblaccess(tbl,condn1,inpt)
+            if data==[]:
+                printstr='Book of that {0} is not found'.format(c)
+            else:
+                tbl=['book','copies']
+                print(data)
+                printstr=tb.tabledisplay(data,db,tbl)
+        except:
+            pass
+    print(printstr)
+    return printstr
+def insertbookdata(db, bname, aname, bcode, publ, price, sfcde, cps, avblcps):
     '''Function to insert new book data'''
-    ans='y'
-    while ans=='y':
-        bname=input("Enter the Book Name:")
-        aname=input("Enter the Name of the Author:")
-        bcode=input("Enter the Book code:")
-        publ=input("Enter the Publishers of the book:")
-        price=int(input("Enter the Price of the book:"))
-        sfcde=input("Enter the Shelf Code:")
-        cps=int(input("Enter the Total no. of copies:"))
-        avblcps=int(input("Enter the available no. of Copies:"))
+    try:
         cmd='insert into book values(\'{0}\',\'{1}\',\'{2}\',\'{3}\',{4},\'{5}\');'.format(bcode,bname,aname,publ,price,sfcde)
         cmd2='insert into copies values(\'{0}\',{1},{2});'.format(bcode,cps,avblcps)
-        cursor.execute(cmd)
-        mycon.commit()
-        cursor.execute(cmd2)
-        mycon.commit()
-        print("Record Inserted!")
-        ans=input("Do you want to insert another data?(y/n):")
+        db.cursor.execute(cmd)
+        db.mycon.commit()
+        db.cursor.execute(cmd2)
+        db.mycon.commit()
+        return True
+    except:
+        return False
 
 def changedata(cursor, mycon):
     '''Function to change data regarding books'''

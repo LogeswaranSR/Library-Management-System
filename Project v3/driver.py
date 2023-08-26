@@ -8,7 +8,8 @@ Created on Sun Jun  4 16:13:20 2023
 #_main_ program
 import time
 import mysql.connector as sqltor
-import table as tb
+import lmstable as tb
+import sys
 import account as ac
 import lmsfunctions as lms
 import loginpage as lp
@@ -16,14 +17,16 @@ import basicclasses as bc
 
 mycon=sqltor.connect(host='localhost',user='root',passwd='14061703')
 csr=mycon.cursor()
-sample=lp.loginpage(csr)
+sample=lp.LoginPage(csr, mycon)
 csr.execute('Use loginid;')
 #Login process
 sample.initialize()
 details=sample.start()
-ui=bc.User(details[0], details[1], details[2])
-    # if lgnoptn==3:
-    #     ac.createacc(csr)
+if not details[0]:
+    print(details)
+    mycon.close()
+    sys.exit()
+ui=bc.User(details[1], details[2], details[3])
 csr.execute('Use library')
 #Member login 
 if ui.lgtp==1:

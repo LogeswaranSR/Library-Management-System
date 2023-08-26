@@ -9,45 +9,30 @@ import table as tb
 
 def login(usrnm, psswd, lgtp, csr,n=0):
     '''Function to login to the management system'''
-    if lgtp==1:
-        tabledata=tb.tblaccess(csr,'mbrlgnid')
-    elif lgtp==2:
-        tabledata=tb.tblaccess(csr,'emplgnid')
-    status=False
-    for dtls in tabledata:
-        if(usrnm==dtls[2])and(psswd==dtls[3]):
-            status=True
-            name=dtls[0]
-            break
-    else:
+    status, name = checkacc(csr, lgtp, usrnm, psswd)
+    if not status:
         n=n+1
         if(n==10):
             name="\n10 Unsuccessful Login Attempts"
         else:
             name=None
     return status,name,n
-def createacc(cursor,mycon):
-    '''Function to create a new account(Both employee and member account)'''
-    cursor.execute('Use loginid')
-    acctype=input("Enter the type of account(E/M):")
-    if acctype=='E':
-        tblnm='emplgnid'
-    elif acctype=='M':
-        tblnm='mbrlgnid'
-    else:
-        print("Invalid Account type")
-        print('Try Again\n')
-        createacc(cursor)
-    name=input("Enter the name:")
-    emailid=input("Enter your Email id:")
-    usrnm=input("Enter the Username(Admission Code, if Member Login):")
-    psswd=input("Enter the Password(Between 8 and 30 Characters):")
-    cmd='insert into {0} values(\'{1}\',\'{2}\',\'{3}\',\'{4}\');'.format(tblnm,name,emailid,usrnm,psswd)
-    cursor.execute(cmd)
-    mycon.commit()
-    time.sleep(1)
-    print("Account Successfully Added\n")
-    cursor.execute('Use library')
+def checkacc(csr, acctype, usrnm, psswd):
+    if acctype==1:
+        tabledata=tb.tblaccess(csr,'mbrlgnid')
+    elif acctype==2:
+        tabledata=tb.tblaccess(csr,'emplgnid')
+    status=False
+    name=None
+    for dtls in tabledata:
+        condn=(usrnm==dtls[2])
+        if psswd!=None:
+            psswd=psswd and (psswd==dtls[3])
+        if condn:
+            status=True
+            name=dtls[0]
+            break
+    return status, name
 def changeaccdet(cursor,mycon,lgntp,usrnm,tp):
     '''Function to change account details of the user'''
     cursor.execute('Use loginid;')

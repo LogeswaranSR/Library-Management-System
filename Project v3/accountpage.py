@@ -12,12 +12,11 @@ from basicclasses import LabelEntryPair
 
 class CreateNewAccountPage:
     
-    def __init__(self, root, csr, conn):
+    def __init__(self, root, db):
         self.root=root
         self.name=self.username=self.emailid=self.password=None
         self.logintype=None
-        self.csr=csr
-        self.conn=conn
+        self.db=db
         
         self.text1 = Label(self.root, text="Create new account!!")
         self.accounttype = tkt.IntVar()
@@ -26,9 +25,9 @@ class CreateNewAccountPage:
         Radiobutton(self.frame, text="Member", variable=self.accounttype, value=1).grid(row=0, column=0)
         Radiobutton(self.frame, text="Employee", variable=self.accounttype, value=2).grid(row=0, column=1)
         self.Name  = LabelEntryPair(self.frame, text="Name:", width=50, borderwidth=5)
-        self.Email = Entry(self.frame, text="Email ID:", width=50, borderwidth=5)
-        self.usrnm = Entry(self.frame, text="User ID:", width=50, borderwidth=5)
-        self.psswd = Entry(self.frame, text="Password:", width=50, borderwidth=5)
+        self.Email = LabelEntryPair(self.frame, text="Email ID:", width=50, borderwidth=5)
+        self.usrnm = LabelEntryPair(self.frame, text="User ID:", width=50, borderwidth=5)
+        self.psswd = LabelEntryPair(self.frame, text="Password:", width=50, borderwidth=5)
         
         self.CreateButton = Button(self.root, text="Create", command=self.createaccount)
         self.ExitButton = Button(self.root, text="Cancel", command=self.root.destroy)
@@ -53,7 +52,7 @@ class CreateNewAccountPage:
         self.username=self.usrnm.get()
         self.password=self.psswd.get()
         
-        status, name = checkacc(self.csr, self.accounttype.get(), self.username, None)
+        status, name = checkacc(self.db, self.accounttype.get(), self.username, None)
         if status:
             tkt.messagebox.showwarning("Already Exists","Username Already Exists\nPlease try another username")
         else:
@@ -62,8 +61,7 @@ class CreateNewAccountPage:
             else:
                 tblnm='emplgnid'
             cmd='insert into {0} values(\'{1}\',\'{2}\',\'{3}\',\'{4}\');'.format(tblnm,self.name,self.emailid,self.username,self.password)
-            self.csr.execute(cmd)
-            self.conn.commit()
+            self.db.execute(cmd)
             tkt.messagebox.showinfo("Success","Account Successfully Added\nLogin with the given credentials to access the account")
             self.root.destroy()
             

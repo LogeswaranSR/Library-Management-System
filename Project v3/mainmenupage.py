@@ -21,7 +21,7 @@ class MainMenuPage:
         self.ChangePasswordButton=Button(self.root, text="Change Password")
         self.LogoutButton=Button(self.root, text="Logout", command=self.sample)
         
-        self.SearchBookBuutton=Button(self.frame, text="Search a Book")
+        self.SearchBookButton=Button(self.frame, text="Search a Book", command=lst[1])
         self.RequestBookButton=Button(self.frame,text="Request a Book")
         self.RenewBookButton=Button(self.frame, text="Renew a Book")
         self.ReturnBookButton=Button(self.frame, text="Return a Book")
@@ -30,7 +30,7 @@ class MainMenuPage:
             self.RequestBookButton=Button(self.frame, text="Lend a Book")
             self.InsertBookButton=Button(self.frame, text="Insert a New Book")
             self.ChangeBDButton=Button(self.frame, text="Change a Book Data")
-            self.CreateNewMemberButton=Button(self.frame, text="Create a New Member Account")
+            self.CreateNewMemberButton=Button(self.frame, text="Create a New Member Account", command=lst[0])
         
     
     def initialize(self):
@@ -40,7 +40,7 @@ class MainMenuPage:
         self.ChangePasswordButton.grid(row=2, column=1, padx=50, pady=10)
         self.LogoutButton.grid(row=2, column=2, padx=50, pady=10)
         
-        self.SearchBookBuutton.grid(row=0, column=1, padx=50, pady=10)
+        self.SearchBookButton.grid(row=0, column=1, padx=50, pady=10)
         self.RequestBookButton.grid(row=1, column=0, padx=50, pady=10)
         self.RenewBookButton.grid(row=1, column=1, padx=50, pady=10)
         self.ReturnBookButton.grid(row=1, column=2, padx=50, pady=10)

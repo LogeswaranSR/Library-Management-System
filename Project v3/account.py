@@ -7,9 +7,9 @@ Created on Sun Jun  4 16:06:41 2023
 import time
 import table as tb
 
-def login(usrnm, psswd, lgtp, csr,n=0):
+def login(usrnm, psswd, lgtp, db,n=0):
     '''Function to login to the management system'''
-    status, name = checkacc(csr, lgtp, usrnm, psswd)
+    status, name = checkacc(db, lgtp, usrnm, psswd)
     if not status:
         n=n+1
         if(n==10):
@@ -17,11 +17,11 @@ def login(usrnm, psswd, lgtp, csr,n=0):
         else:
             name=None
     return status,name,n
-def checkacc(csr, acctype, usrnm, psswd):
+def checkacc(db, acctype, usrnm, psswd):
     if acctype==1:
-        tabledata=tb.tblaccess(csr,'mbrlgnid')
+        tabledata=db.tblaccess('mbrlgnid')
     elif acctype==2:
-        tabledata=tb.tblaccess(csr,'emplgnid')
+        tabledata=db.tblaccess('emplgnid')
     status=False
     name=None
     for dtls in tabledata:

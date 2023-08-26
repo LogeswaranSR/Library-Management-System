@@ -8,7 +8,7 @@ Created on Sun Aug  6 18:36:29 2023
 from tkinter import Tk, Button, Label, Entry, Radiobutton, LabelFrame
 import tkinter as tkt
 from time import sleep
-from createaccountpage import CreateNewAccountPage as CNAPage
+from pagedeclarer import caprocess
 from account import login
 
 class LoginPage:
@@ -31,7 +31,7 @@ class LoginPage:
         self.psswd = Entry(self.frame, width=50, borderwidth=5)
         self.Loginbutton = Button(self.root, text="Login", command=self.loginprocess)
         self.ExitButton = Button(self.root, text="Cancel", command=self.stop)
-        self.CreateAccountButton = Button(self.root, text="Create new Account", command=self.caprocess)
+        self.CreateAccountButton = Button(self.root, text="Create new Account", command=lambda: caprocess(self.root, self.db))
         self.status=Label(self.root, text="Login Failed\nPlease Try Again")
         self.name=self.username=None
         self.loggedin=False
@@ -40,7 +40,7 @@ class LoginPage:
         self.username=self.usrnm.get()
         password=self.psswd.get()
         lgtp=self.logintype.get()
-        self.loggedin, self.name, LoginPage.n = login(self.username, password, lgtp, self.db.csr, LoginPage.n)
+        self.loggedin, self.name, LoginPage.n = login(self.username, password, lgtp, self.db, LoginPage.n)
         if self.loggedin:
             self.status.grid_forget()
             self.status=Label(self.root, text="Login Success\n Redirecting")
@@ -82,11 +82,6 @@ class LoginPage:
             sleep(2)
         self.root.destroy()
         
-    def caprocess(self):
-        top=tkt.Toplevel()
-        cna=CNAPage(top, self.db)
-        cna.initialize()
-        cna.start()
         
 if __name__=='__main__':
     import mysql.connector as sqltor

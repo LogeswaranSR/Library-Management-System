@@ -46,7 +46,8 @@ class Database:
         
     def execute(self, command):
         self.csr.execute(command)
-        self.conn.commit()
+        if 'select' not in command:
+            self.conn.commit()
         
     def get(self, command):
         self.execute(command)

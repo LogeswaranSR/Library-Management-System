@@ -9,6 +9,7 @@ from tkinter import Button, Label, Entry, Radiobutton, LabelFrame
 import tkinter as tkt
 from basicclasses import LabelEntryPair
 from lmsfunctions import insertbookdata, selectfn
+import lmstable as tb
 
 class SearchBookPage:
     def __init__(self, root, db):
@@ -51,10 +52,13 @@ class SearchBookPage:
     def search(self):
         typeval=self.clmn.get()
         searchval=self.value.get()
-        printstr=selectfn(self.db, 'book b,copies c', typeval, searchval)
         if self.details!=None:
             self.details.grid_forget()
-        self.details=Label(self.root, text=printstr)
+        data, tbl=selectfn(self.db, 'book b,copies c', typeval, searchval)
+        if(type(data)==str):
+            self.details=Label(self.root, text=data)
+        else:
+            self.details=tb.tableframe(data, self.root, self.db, tbl)
         self.details.grid(row=4, column=0, columnspan=2)
         
     def back(self, mainpage):

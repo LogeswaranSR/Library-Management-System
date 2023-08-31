@@ -13,6 +13,7 @@ class Database:
     def __init__(self, host, user, passwd, database):
         self.conn=sqltor.connect(host=host,user=user,passwd=passwd,database=database)
         self.csr=self.conn.cursor()
+        self.donotcommit=['select', 'desc']
         self.db=database
         
     def tabledetails(self, table):
@@ -21,11 +22,9 @@ class Database:
             cmd='desc '+table+';'
             data=self.get(cmd)
             data1=[]
-            data2=[]
             for row in data:
-                data1.append(row[0])
-                data2.append(str(row[1]))
-            return data1,data2
+                data1.append(str(row[0]))
+            return data1
         except:
             print("No such table exists")
     
@@ -46,7 +45,10 @@ class Database:
         
     def execute(self, command):
         self.csr.execute(command)
-        if 'select' not in command:
+        stat=True
+        for cmd in self.donotcommit:
+            stat=stat and cmd in command
+        if stat:
             self.conn.commit()
         
     def get(self, command):
@@ -68,7 +70,7 @@ class User:
 class LabelEntryPair:
     def __init__(self, root, text, width=50, borderwidth=5):
         self.label=tkt.Label(root, text=text)
-        self.entry=tkt.Entry(root, widt=width, borderwidth=borderwidth)
+        self.entry=tkt.Entry(root, width=width, borderwidth=borderwidth)
         
     def grid(self, row):
         self.label.grid(row=row, column=0)

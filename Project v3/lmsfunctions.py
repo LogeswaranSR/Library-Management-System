@@ -5,7 +5,7 @@ def selectfn(db, tbl, clmn, value):
     '''Function to search a book'''
     inpt='b.bcode,bname,author,publ,price,slf,tcp,acp'
     condn1='b.bcode=c.bcode and '
-    printstr=None
+    data=None
     if clmn==1:
         c='Name'
         condn1+='BNAME=\'{0}\''.format(value)
@@ -22,22 +22,21 @@ def selectfn(db, tbl, clmn, value):
         tbl1='GENRECODE'
         data1=db.tblaccess(tbl1,condn2,'*')
         if data1==[]:
-            printstr='Book of that Genre is not Found'
+            data='Book of that Genre is not Found'
+            tbl=[]
         else:
             condn1+='b.BCODE LIKE \'{0}%\''.format(data1[0][0])
-    if printstr==None:
+    if data==None:
         try:
             data=db.tblaccess(tbl,condn1,inpt)
             if data==[]:
-                printstr='Book of that {0} is not found'.format(c)
+                tbl=[]
+                data='Book of that {0} is not found'.format(c)
             else:
                 tbl=['book','copies']
-                print(data)
-                printstr=tb.tabledisplay(data,db,tbl)
         except:
             pass
-    print(printstr)
-    return printstr
+    return data, tbl
 def insertbookdata(db, bname, aname, bcode, publ, price, sfcde, cps, avblcps):
     '''Function to insert new book data'''
     try:

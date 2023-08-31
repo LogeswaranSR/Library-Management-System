@@ -37,9 +37,8 @@ mainpage.initialize()
 mainpage.start()
 #Employee Login
 #Displaying the end message
-time.sleep(5)
 print("You have Logged out Successfully!!!!")
-time.sleep(1)
 print("Thank you for visiting our Library!!!")
+del ui
 librarydb.close()
 logindb.close()

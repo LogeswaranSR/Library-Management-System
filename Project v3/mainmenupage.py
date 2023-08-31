@@ -19,7 +19,7 @@ class MainMenuPage:
         self.frame=LabelFrame(self.root)
         self.ChangeADButton=Button(self.root, text="Change Account Details")
         self.ChangePasswordButton=Button(self.root, text="Change Password")
-        self.LogoutButton=Button(self.root, text="Logout", command=self.sample)
+        self.LogoutButton=Button(self.root, text="Logout", command=self.logout)
         
         self.SearchBookButton=Button(self.frame, text="Search a Book", command=lst[1])
         self.RequestBookButton=Button(self.frame,text="Request a Book")
@@ -60,10 +60,9 @@ class MainMenuPage:
     def start(self):
         self.root.mainloop()
         
-    def sample(self):
-        self.forget()
-        # self.declare()
-        self.initialize()
+    def logout(self):
+        tkt.messagebox.showinfo(title="Logout Success",message="You have been logged out of the System successfully!!!\nThank you for visiting us!!!")
+        self.root.destroy()
         
 
 if __name__=='__main__':

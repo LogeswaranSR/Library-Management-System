@@ -6,12 +6,12 @@ Created on Sat Aug 26 12:00:43 2023
 """
 
 import menupages as mpgs
-from accountpage import CreateNewAccountPage as CNAPage
+import accountpage as acc
 import tkinter as tkt
 
 def caprocess(root, db):
     top=tkt.Toplevel(root)
-    cna=CNAPage(top, db)
+    cna=acc.CreateNewAccountPage(top, db)
     cna.initialize()
     cna.start()
     
@@ -26,3 +26,15 @@ def insertbookprocess(page, root, db):
     ibpage=mpgs.InsertBookPage(root, db)
     ibpage.declare(page)
     ibpage.initialize()
+    
+def changeaccdetprocess(root, db, ui):
+    top=tkt.Toplevel(root)
+    cad=acc.ChangeAccountDetailsPage(top, db, ui)
+    cad.initialize()
+    cad.start()
+    
+def changepasswordprocess(root, db, ui):
+    top=tkt.Toplevel(root)
+    cpwd=acc.ChangePasswordPage(top, db, ui)
+    cpwd.initialize()
+    cpwd.start()

@@ -56,14 +56,17 @@ class Database:
         return self.csr.fetchall()
         
 class User:
-    def __init__(self, name, lgid, type):
+    def __init__(self, name, lgid, type, emailid):
         self.name=name
         self.lgid=lgid
         self.lgtp=type
+        self.email=emailid
         self.mainpage=""
         if self.lgtp==1:
+            self.tblnm="mbrlgnid"
             self.mainpage="1:Search a Book\n2:Request for a Book\n3:Renew a Book\n4:Return a Book\n5:Change Account Details\n6:Change Password\n"
         else:
+            self.tblnm="emplgnid"
             self.mainpage="1:Search a Book\n2:Insert a New Book \n3:Change a Book Data\n4:Lend a Book\n5:Renew a Book\n6:Return a Book\n7:Create a New Member Account\n8:Change Account Details\n9:Change Password\n"
         self.mainpage+="0:Logout and Exit"
         
@@ -78,6 +81,9 @@ class LabelEntryPair:
         
     def get(self):
         return self.entry.get()
+    
+    def set(self, text):
+        self.entry.insert(0, text)
     
     def forget(self):
         self.label.grid_forget()

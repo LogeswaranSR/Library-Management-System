@@ -20,25 +20,23 @@ logindb=bc.Database(host='localhost',user='root',passwd='14061703', database='lo
 sample=lp.LoginPage(logindb)
 #Login process
 sample.initialize()
-details=sample.start()
-if not details[0]:
-    print(details)
+user=sample.start()
+print(user)
+if not user:
     del logindb
     sys.exit()
-ui=bc.User(details[1], details[2], details[3])
 librarydb=bc.Database(host='localhost',user='root',passwd='14061703', database='library')
 #Member login 
-mainpage=mp.MainMenuPage(ui, librarydb)
+mainpage=mp.MainMenuPage(user, librarydb)
 pagedeclns=[lambda: pd.caprocess(mainpage.root, logindb),
             lambda: pd.searchbookprocess(mainpage, mainpage.root, librarydb),
-            lambda: pd.insertbookprocess(mainpage, mainpage.root, librarydb)]
+            lambda: pd.changeaccdetprocess(mainpage.root, logindb, user),
+            lambda: pd.changepasswordprocess(mainpage.root, logindb, user)]
+if user.lgtp==2:
+    pagedeclns.append([lambda: pd.insertbookprocess(mainpage, mainpage.root, librarydb)])
 mainpage.declare(pagedeclns)
 mainpage.initialize()
 mainpage.start()
-#Employee Login
-#Displaying the end message
-print("You have Logged out Successfully!!!!")
-print("Thank you for visiting our Library!!!")
-del ui
+del user
 librarydb.close()
 logindb.close()

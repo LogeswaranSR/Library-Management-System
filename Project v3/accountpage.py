@@ -5,9 +5,9 @@ Created on Fri Aug 18 21:28:25 2023
 @author: Loges
 """
 
-from tkinter import Button, Label, Entry, Radiobutton, LabelFrame
+from tkinter import Button, Label, Radiobutton, LabelFrame
 import tkinter as tkt
-from account import checkacc
+import account as ac
 from basicclasses import LabelEntryPair
 
 class CreateNewAccountPage:
@@ -52,7 +52,7 @@ class CreateNewAccountPage:
         self.username=self.usrnm.get()
         self.password=self.psswd.get()
         
-        status, name = checkacc(self.db, self.accounttype.get(), self.username, None)
+        status, name = ac.checkacc(self.db, self.username, psswd=None, acctype=self.accounttype.get())
         if status:
             tkt.messagebox.showwarning("Already Exists","Username Already Exists\nPlease try another username")
         else:
@@ -66,12 +66,101 @@ class CreateNewAccountPage:
             self.root.destroy()
             
 class ChangeAccountDetailsPage:
-    def __init__(self, root, csr):
+    def __init__(self, root, db, ui):
         self.root=root
+        self.db=db
+        self.ui=ui
+        
+        self.greeting=Label(self.root, text="User Account Details")
+        self.frame=LabelFrame(self.root)
+        self.name=LabelEntryPair(self.frame, text="Name")
+        self.email=LabelEntryPair(self.frame, text="Email")
+        self.usrnm=LabelEntryPair(self.frame, text="Username:")
+        self.updateButton=Button(self.root, text="Update", command=self.update)
+        self.cancelButton=Button(self.root, text="Cancel", command=self.root.destroy)
+        
+    def initialize(self):
+        self.greeting.grid(row=0, column=0, columnspan=2)
+        self.frame.grid(row=1, column=0, columnspan=2)
+        self.updateButton.grid(row=2, column=0)
+        self.cancelButton.grid(row=2, column=1)
+        self.fetchdata()
+        self.name.grid(row=0)
+        self.email.grid(row=1)
+        self.usrnm.grid(row=2)
+        
+    def fetchdata(self):
+        condn='USRNM=\'{0}\''.format(self.ui.lgid)
+        data=self.db.tblaccess(self.ui.tblnm,condn,'name,emailid,usrnm')
+        self.name.set(data[0][0])
+        self.email.set(data[0][1])
+        self.usrnm.set(data[0][2])
+        
+    def update(self):
+        name=self.name.get()
+        email=self.email.get()
+        usrnm=self.usrnm.get()
+        stat, msg = ac.changeaccdet(self.db, self.ui, name, usrnm, email)
+        if not stat:
+            tkt.messagebox.showerror(title="Error!", message=msg)
+            self.initialize()
+        else:
+            tkt.messagebox.showinfo(title="Success", message=msg)
+            self.root.destroy()
+            
+    def start(self):
+        self.root.mainloop()
+        
         
 class ChangePasswordPage:
-    def __init__(self, root, csr):
+    def __init__(self, root, db, ui):
         self.root=root
+        self.db=db
+        self.ui=ui
+        
+        self.greeting=Label(self.root, text="Change Password")
+        self.frame=LabelFrame(self.root)
+        self.oldps=LabelEntryPair(self.frame, text="Old Password:")
+        self.newps=LabelEntryPair(self.frame, text="New Password:")
+        self.rnewps=LabelEntryPair(self.frame, text="Re-enter New Password")
+        self.changeButton=Button(self.root, text="Change Password", command=self.change)
+        self.cancelButton=Button(self.root, text="Cancel", command=self.root.destroy)
+        
+    def initialize(self):
+        self.greeting.grid(row=0, column=0, columnspan=2)
+        self.frame.grid(row=1, column=0, columnspan=2)
+        self.changeButton.grid(row=2, column=0)
+        self.cancelButton.grid(row=2, column=1)
+        
+        self.oldps.grid(row=0)
+        self.newps.grid(row=1)
+        self.rnewps.grid(row=2)
+        
+    def change(self):
+        old=self.oldps.get()
+        new=self.newps.get()
+        rnew=self.rnewps.get()
+        if new!=rnew:
+            self.changeButton.grid_forget()
+            self.changeButton=Button(self.root, text="Change Password", command=self.change, state='disabled')
+            self.changeButton.grid(row=2, column=0)
+            tkt.messagebox.showerror(title="Password doesn't match", message="New Password and Re-enter New Password doesn't match\nPlease Try Again")
+            self.changeButton.grid_forget()
+            self.changeButton=Button(self.root, text="Change Password", command=self.change)
+            self.changeButton.grid(row=2, column=0)
+            self.initialize()
+        else:
+            stat, msg = ac.changepassword(self.db, self.ui, old, new)
+            if not stat:
+                tkt.messagebox.showerror(title="Password doesn't match", message="Old Password mismatch\nPlease Try Again")
+                self.initialize()
+            else:
+                tkt.messagebox.showinfo(title="Success!!", message=msg)
+                self.root.destroy()
+    
+    def start(self):
+        self.root.mainloop()
+
             
 if __name__=='__main__':
     import mysql.connector as sqltor

@@ -16,12 +16,12 @@ class SearchBookPage:
         self.db=db
         self.clmn=tkt.IntVar()
         
-    def declare(self):
+    def declare(self, mainpage):
         self.greeting=Label(self.root, text="Search a Book")
         self.f1=LabelFrame(self.root, text="Select any of the fields below")
         self.f2=LabelFrame(self.root)
         self.SearchButton=Button(self.root, text="Search", command=self.search)
-        self.CancelButton=Button(self.root, text="Cancel", command=self.forget)
+        self.CancelButton=Button(self.root, text="Cancel", command=lambda: self.back(mainpage))
         
         Radiobutton(self.f1, text="Book Name", variable=self.clmn, value=1).grid(row=0, column=0)
         Radiobutton(self.f1, text="Book Code", variable=self.clmn, value=2).grid(row=0, column=1)
@@ -57,12 +57,16 @@ class SearchBookPage:
         self.details=Label(self.root, text=printstr)
         self.details.grid(row=4, column=0, columnspan=2)
         
+    def back(self, mainpage):
+        self.forget()
+        mainpage.initialize()
+        
 class InsertBookPage:
     def __init__(self, root, db):
         self.root=root
         self.db=db
         
-    def declare(self):
+    def declare(self, page):
         self.greeting=Label(self.root, text="Insert a Book")
         self.frame=LabelFrame(self.root)
         
@@ -76,7 +80,7 @@ class InsertBookPage:
         self.availablecopies=LabelEntryPair(self.frame, text="Available Copies")
         
         self.SubmitButton=Button(self.root, text='Submit', command=self.insert)
-        self.CancelButton=Button(self.root, text="Cancel", command=self.forget)
+        self.CancelButton=Button(self.root, text="Cancel", command=lambda: self.back(page))
         
     def initialize(self):
         self.greeting.grid(row=0, column=0, columnspan=2)
@@ -114,7 +118,9 @@ class InsertBookPage:
         self.SubmitButton.grid_forget()
         self.CancelButton.grid_forget()
         
-        
+    def back(self, mainpage):
+        self.forget()
+        mainpage.initialize()
         
 class ChangeBookInfoPage:
     def __init__(self, root, db):

@@ -18,5 +18,11 @@ def caprocess(root, db):
 def searchbookprocess(page, root, db):
     page.forget()
     sbpage=mpgs.SearchBookPage(root, db)
-    sbpage.declare()
+    sbpage.declare(page)
     sbpage.initialize()
+    
+def insertbookprocess(page, root, db):
+    page.forget()
+    ibpage=mpgs.InsertBookPage(root, db)
+    ibpage.declare(page)
+    ibpage.initialize()

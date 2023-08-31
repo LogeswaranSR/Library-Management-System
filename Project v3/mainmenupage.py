@@ -28,7 +28,7 @@ class MainMenuPage:
         
         if self.ui.lgtp==2:
             self.RequestBookButton=Button(self.frame, text="Lend a Book")
-            self.InsertBookButton=Button(self.frame, text="Insert a New Book")
+            self.InsertBookButton=Button(self.frame, text="Insert a New Book", command=lst[2])
             self.ChangeBDButton=Button(self.frame, text="Change a Book Data")
             self.CreateNewMemberButton=Button(self.frame, text="Create a New Member Account", command=lst[0])
         
@@ -67,14 +67,12 @@ class MainMenuPage:
         
 
 if __name__=='__main__':
-    import mysql.connector as sqltor
     from basicclasses import User, Database
-    mycon=sqltor.connect(host='localhost',user='root',passwd='14061703')
-    csr=mycon.cursor()
+    db=Database(host='localhost',user='root',passwd='14061703', database='library')
     ui=User('abcxyz','abcxyz',2)
-    page=MainMenuPage(csr, ui)
+    page=MainMenuPage(ui, db)
     page.declare()
     page.initialize()
     page.start()
-    mycon.close()
+    db.close()
         

@@ -30,7 +30,8 @@ librarydb=bc.Database(host='localhost',user='root',passwd='14061703', database='
 #Member login 
 mainpage=mp.MainMenuPage(ui, librarydb)
 pagedeclns=[lambda: pd.caprocess(mainpage.root, logindb),
-            lambda: pd.searchbookprocess(mainpage, mainpage.root, librarydb)]
+            lambda: pd.searchbookprocess(mainpage, mainpage.root, librarydb),
+            lambda: pd.insertbookprocess(mainpage, mainpage.root, librarydb)]
 mainpage.declare(pagedeclns)
 mainpage.initialize()
 mainpage.start()

@@ -16,7 +16,7 @@ mycon=sqltor.connect(host='localhost',user='root',passwd='********')
 csr=mycon.cursor()
 while True:
     print("""
-    Welcome to Sairam Vidyalaya's Library!!!!\n
+    Welcome to XXXXXXXXXXXXXXXXX Library!!!!\n
 1:Member Login
 2:Employee login\n
 """)#Program startup message

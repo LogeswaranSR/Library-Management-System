@@ -4,7 +4,7 @@ Created on Sun Jun  4 15:55:59 2023
 
 @author: Loges
 """
-
+from tabulate import tabulate
 def tblaccess(cursor,tblnm,condn=None,cname='*'):
     '''Function to get resultset from Mysql'''
     if condn==None:
@@ -36,71 +36,5 @@ def tabledisplay(data,db,tbl):
         ctype.append(ctype2[2])
     else:
         cname,ctype=db.tabledetails(tbl)
-    print('|',end='')
-    n=[]
-    for i in range(len(data[0])):
-        if 'int' in ctype[i] or 'char(3)' in ctype[i]:
-            length=len(str(cname[i]))
-            spln=5-length
-            print(cname[i],end='')
-            print(spln*' ',end='')
-            print('|',end='')
-            n.append(5)
-        elif 'varchar(15)' in ctype[i]:
-            length=len(cname[i])
-            spln=15-length
-            print(cname[i],end='')
-            print(spln*' ',end='')
-            print("|",end='')
-            n.append(15)
-        elif 'varchar' in ctype[i]:
-            length=len(cname[i])
-            spln=40-length
-            print(cname[i],end='')
-            print(spln*' ',end='')
-            print("|",end='')
-            n.append(40)
-        else:
-            pass
-    print()
-    print('+',end='')
-    for i in n:
-        print(i*'=',end='')
-        print(end='+')
-    print()
-    for row in data:
-        print('|',end='')
-        clm=len(row)
-        n=[]
-        for col in range(0,clm):
-            if 'int' in ctype[col] or 'char(3)' in ctype[col]:
-                length=len(str(row[col]))
-                spln=5-length
-                print(row[col],end='')
-                print(spln*' ',end='')
-                print('|',end='')
-                n.append(5)
-            elif 'varchar(15)' in ctype[col]:
-                length=len(row[col])
-                spln=15-length
-                print(row[col],end='')
-                print(spln*' ',end='')
-                print("|",end='')
-                n.append(15)
-            elif 'varchar' in ctype[col]:
-                length=len(row[col])
-                spln=40-length
-                print(row[col],end='')
-                print(spln*' ',end='')
-                print("|",end='')
-                n.append(40)
-            else:
-                print(row[col],end=' |')
-                n.append(len(row[col])+2)
-        print()
-        print('+',end='')
-        for i in n:
-            print(i*'-',end='')
-            print(end='+')
-        print()
-    print()
+    table=tabulate(data, cname, 'grid')
+    print(table)

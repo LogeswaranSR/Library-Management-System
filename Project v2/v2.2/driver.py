@@ -9,11 +9,11 @@ Created on Sun Jun  4 16:13:20 2023
 import time
 import pgmclasses as pc
 
-logindb=pc.Database('localhost', 'root', '14061703', 'loginid')
-librarydb=pc.Database('localhost', 'root', '14061703', 'library')
+logindb=pc.Database('localhost', 'root', '********', 'loginid')
+librarydb=pc.Database('localhost', 'root', '********', 'library')
 #Program startup message
 print("""
-    Welcome to Sairam Vidyalaya's Library!!!!\n
+    Welcome to XXXXXXXXXX Library!!!!\n
 1:Member Login
 2:Employee login\n
 """)

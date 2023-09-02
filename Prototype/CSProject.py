@@ -57,74 +57,8 @@ def tabledisplay(data,csr,tbl):#Function to display the data obtained in the for
         ctype.append(ctype2[2])
     else:
         cname,ctype=tabledetails(csr,tbl)
-    print('|',end='')
-    n=[]
-    for i in range(len(data[0])):
-        if 'int' in ctype[i] or 'char(3)' in ctype[i]:
-            length=len(str(cname[i]))
-            spln=5-length
-            print(cname[i],end='')
-            print(spln*' ',end='')
-            print('|',end='')
-            n.append(5)
-        elif 'varchar(15)' in ctype[i]:
-            length=len(cname[i])
-            spln=15-length
-            print(cname[i],end='')
-            print(spln*' ',end='')
-            print("|",end='')
-            n.append(15)
-        elif 'varchar' in ctype[i]:
-            length=len(cname[i])
-            spln=40-length
-            print(cname[i],end='')
-            print(spln*' ',end='')
-            print("|",end='')
-            n.append(40)
-        else:
-            pass
-    print()
-    print('+',end='')
-    for i in n:
-        print(i*'=',end='')
-        print(end='+')
-    print()
-    for row in data:
-        print('|',end='')
-        clm=len(row)
-        n=[]
-        for col in range(0,clm):
-            if 'int' in ctype[col] or 'char(3)' in ctype[col]:
-                length=len(str(row[col]))
-                spln=5-length
-                print(row[col],end='')
-                print(spln*' ',end='')
-                print('|',end='')
-                n.append(5)
-            elif 'varchar(15)' in ctype[col]:
-                length=len(row[col])
-                spln=15-length
-                print(row[col],end='')
-                print(spln*' ',end='')
-                print("|",end='')
-                n.append(15)
-            elif 'varchar' in ctype[col]:
-                length=len(row[col])
-                spln=40-length
-                print(row[col],end='')
-                print(spln*' ',end='')
-                print("|",end='')
-                n.append(40)
-            else:
-                print(row[col],end=' |')
-                n.append(len(row[col])+2)
-        print()
-        print('+',end='')
-        for i in n:
-            print(i*'-',end='')
-            print(end='+')
-        print()
-    print()
+    table=tabulate(data, cname, 'grid')
+    print(table)
 def selectfn(csr,tbl):#Function to search a book
     inpt='b.bcode,bname,author,publ,price,slf,tcp,acp'
     print()
@@ -329,6 +263,7 @@ def returnbook(cursor,lgtp):#Function to return a book
 #_main_ program
 import time
 import mysql.connector as sqltor
+from tabulate import tabulate
 mycon=sqltor.connect(host='localhost',user='root',passwd='********')
 csr=mycon.cursor()
 while True:

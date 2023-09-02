@@ -58,66 +58,9 @@ def tabledisplay(data,csr,tbl):
         ctype.append(ctype2[2])
     else:
         cname,ctype=tabledetails(csr,tbl)
-    print('|',end='')
-    n=1
-    for i in range(len(data[0])):
-        if 'int' in ctype[i] or 'char(3)' in ctype[i]:
-            length=len(str(cname[i]))
-            spln=5-length
-            print(cname[i],end='')
-            indent(spln)
-            print('|',end='')
-            n+=6
-        elif 'varchar(15)' in ctype[i]:
-            length=len(cname[i])
-            spln=15-length
-            print(cname[i],end=' ')
-            indent(spln-1)
-            print("|",end='')
-            n+=16
-        elif 'varchar' in ctype[i]:
-            length=len(cname[i])
-            spln=40-length
-            print(cname[i],end=' ')
-            indent(spln-1)
-            print("|",end='')
-            n+=41
-        else:
-            pass
-    print()
-    indent(n,'-')
-    print()
-    for row in data:
-        print('|',end='')
-        clm=len(row)
-        n=1
-        for col in range(0,clm):
-            if 'int' in ctype[col] or 'char(3)' in ctype[col]:
-                length=len(str(row[col]))
-                spln=5-length
-                print(row[col],end='')
-                indent(spln)
-                print('|',end='')
-                n+=6
-            elif 'varchar(15)' in ctype[col]:
-                length=len(row[col])
-                spln=15-length
-                print(row[col],end=' ')
-                indent(spln-1)
-                print("|",end='')
-                n+=16
-            elif 'varchar' in ctype[col]:
-                length=len(row[col])
-                spln=40-length
-                print(row[col],end=' ')
-                indent(spln-1)
-                print("|",end='')
-                n+=41
-            else:
-                print(' ',row[col],end=' |')
-        print()
-        indent(n,'-')
-        print()
+    printstr=tabulate(data, cname, 'grid')
+    print(printstr)
+    
 def selectfn(csr,tbl):
     inpt='b.bcode,bname,author,publ,price,slf,tcp,acp'
     print()
@@ -310,10 +253,11 @@ def returnbook(cursor,lgtp):
             returnbook(cursor,lgtp)
 import time
 import mysql.connector as sqltor
+from tabulate import tabulate
 mycon=sqltor.connect(host='localhost',user='root',passwd='********')
 csr=mycon.cursor()
 print("""
-Welcone to Sairam Vidyalaya's Library!!!!
+Welcone to XXXXXXXXXXXX's Library!!!!
 
 1:Member Login
 2:Employee login

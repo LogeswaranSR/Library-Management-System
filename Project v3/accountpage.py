@@ -163,12 +163,13 @@ class ChangePasswordPage:
 
             
 if __name__=='__main__':
-    import mysql.connector as sqltor
-    mycon=sqltor.connect(host='localhost',user='root',passwd='14061703')
-    csr=mycon.cursor()
-    csr.execute('Use loginid;')
+    import basicclasses as bc
+    db=bc.Database(host='localhost',user='root',passwd='14061703', database='loginid')
+    ui=bc.User('abcxyz', 'abcxyz', 2, 'abcxyz@gmail.com')
     root=tkt.Tk()
-    sample=CreateNewAccountPage(root, csr, mycon)
+    top=tkt.Toplevel(root)
+    sample=ChangePasswordPage(top, db, ui)
     sample.initialize()
     sample.start()
-    mycon.close()
+    del db
+    del ui

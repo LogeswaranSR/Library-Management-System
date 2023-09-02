@@ -6,12 +6,8 @@ Created on Sun Jun  4 16:13:20 2023
 """
 
 #_main_ program
-import time
-import lmstable as tb
 import sys
 import pagedeclarer as pd
-import account as ac
-import lmsfunctions as lms
 import mainmenupage as mp
 import loginpage as lp
 import basicclasses as bc
@@ -33,7 +29,7 @@ pagedeclns=[lambda: pd.caprocess(mainpage.root, logindb),
             lambda: pd.changeaccdetprocess(mainpage.root, logindb, user),
             lambda: pd.changepasswordprocess(mainpage.root, logindb, user)]
 if user.lgtp==2:
-    pagedeclns.append([lambda: pd.insertbookprocess(mainpage, mainpage.root, librarydb)])
+    pagedeclns.extend([lambda: pd.insertbookprocess(mainpage, mainpage.root, librarydb)])
 mainpage.declare(pagedeclns)
 mainpage.initialize()
 mainpage.start()

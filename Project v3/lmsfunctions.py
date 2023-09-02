@@ -37,9 +37,10 @@ def selectfn(db, tbl, clmn, value):
         except:
             pass
     return data, tbl
-def insertbookdata(db, bname, aname, bcode, publ, price, sfcde, cps, avblcps):
+def insertbookdata(db, details):
     '''Function to insert new book data'''
     try:
+        bname, aname, bcode, publ, price, sfcde, cps, avblcps=details
         cmd='insert into book values(\'{0}\',\'{1}\',\'{2}\',\'{3}\',{4},\'{5}\');'.format(bcode,bname,aname,publ,price,sfcde)
         cmd2='insert into copies values(\'{0}\',{1},{2});'.format(bcode,cps,avblcps)
         db.execute(cmd)
@@ -48,22 +49,20 @@ def insertbookdata(db, bname, aname, bcode, publ, price, sfcde, cps, avblcps):
     except:
         return False
 
-def changedata(db):
+def changedata(db, changes, code):
     '''Function to change data regarding books'''
-    tname=input('Enter the Table Name(Book,Copies,Genrecode):')
-    code=input("Enter the Book Code/Genre Code(First 3 Numbers of Book Code):")
-    cmd1='select * from {0} where BCODE=\'{1}\';'.format(tname,code)
-    data1=db.get(cmd1)
-    if data1!=None:
-        print('Data:')
-        tb.tabledisplay(data1,db.csr,tname)
-        cname=input("Enter the column name to be changed:")
-        value=input("Enter the new data:")
-        cmd2='update {0} set {1}=\'{2}\' where BCODE=\'{3}\';'.format(tname,cname,value,code)
-        db.execute(cmd2)
-        print("Record Updated!\n")
-    else:
-        print("Data not Found\n")
+    try:
+        if 'ACP' in changes:
+            cmd2='update copies set ACP={0} where BCODE=\'{1}\';'.format(changes["ACP"],code)
+            db.execute(cmd2)
+        cmd='update book set '
+        for col in changes:
+            cmd+='{0}=\'{1}\','.format(col, changes[col])
+        cmd=cmd[:-1]+' where BCODE=\'{}\';'.format(code)
+        db.execute(cmd)
+        return True
+    except:
+        return False
 def lendbook(db, lgtp):
     '''Function to lend a book'''
     if lgtp=='M':

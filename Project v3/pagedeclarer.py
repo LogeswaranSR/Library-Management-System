@@ -14,6 +14,7 @@ def caprocess(root, db):
     cna=acc.CreateNewAccountPage(top, db)
     cna.initialize()
     cna.start()
+    del cna
     
 def searchbookprocess(page, root, db):
     page.forget()
@@ -21,20 +22,30 @@ def searchbookprocess(page, root, db):
     sbpage.declare(page)
     sbpage.initialize()
     
+    
 def insertbookprocess(page, root, db):
     page.forget()
-    ibpage=mpgs.InsertBookPage(root, db)
-    ibpage.declare(page)
+    ibpage=mpgs.InsertBookPage(page, root, db)
+    ibpage.declare()
     ibpage.initialize()
+    
+def changebookinfoprocess(page, root, db):
+    page.forget()
+    cbinfopage=mpgs.ChangeBookInfoPage(page, root, db)
+    cbinfopage.declare()
+    cbinfopage.initialize()
+    
     
 def changeaccdetprocess(root, db, ui):
     top=tkt.Toplevel(root)
     cad=acc.ChangeAccountDetailsPage(top, db, ui)
     cad.initialize()
     cad.start()
+    del cad
     
 def changepasswordprocess(root, db, ui):
     top=tkt.Toplevel(root)
     cpwd=acc.ChangePasswordPage(top, db, ui)
     cpwd.initialize()
     cpwd.start()
+    del cpwd

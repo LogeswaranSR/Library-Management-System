@@ -8,7 +8,7 @@ Created on Fri Aug 25 16:01:55 2023
 from tkinter import Button, Label, Entry, Radiobutton, LabelFrame
 import tkinter as tkt
 from basicclasses import LabelEntryPair
-from lmsfunctions import insertbookdata, selectfn
+import lmsfunctions as lf
 import lmstable as tb
 
 class SearchBookPage:
@@ -54,7 +54,7 @@ class SearchBookPage:
         searchval=self.value.get()
         if self.details!=None:
             self.details.grid_forget()
-        data, tbl=selectfn(self.db, 'book b,copies c', typeval, searchval)
+        data, tbl=lf.selectfn(self.db, 'book b,copies c', typeval, searchval)
         if(type(data)==str):
             self.details=Label(self.root, text=data)
         else:
@@ -66,11 +66,12 @@ class SearchBookPage:
         mainpage.initialize()
         
 class InsertBookPage:
-    def __init__(self, root, db):
+    def __init__(self, page, root, db):
+        self.mainpage=page
         self.root=root
         self.db=db
         
-    def declare(self, page):
+    def declare(self):
         self.greeting=Label(self.root, text="Insert a Book")
         self.frame=LabelFrame(self.root)
         
@@ -84,7 +85,7 @@ class InsertBookPage:
         self.availablecopies=LabelEntryPair(self.frame, text="Available Copies")
         
         self.SubmitButton=Button(self.root, text='Submit', command=self.insert)
-        self.CancelButton=Button(self.root, text="Cancel", command=lambda: self.back(page))
+        self.CancelButton=Button(self.root, text="Cancel", command=self.back)
         
     def initialize(self):
         self.greeting.grid(row=0, column=0, columnspan=2)
@@ -110,9 +111,11 @@ class InsertBookPage:
         scode=self.shelfcode.get()
         cps=self.totalcopies.get()
         avblcps=self.availablecopies.get()
-        stat=insertbookdata(self.db, bn, an, bc, publ, pr, scode, cps, avblcps)
+        details=(bn, an, bc, publ, pr, scode, cps, avblcps)
+        stat=lf.insertbookdata(self.db, details)
         if stat:
             tkt.messagebox.showinfo(title='Success', message="Book Inserted Successfully!!!")
+            self.back()
         else:
             tkt.messagebox.showerror(title="Error", message="Some error Occured!!\nTry Again")
     
@@ -122,18 +125,97 @@ class InsertBookPage:
         self.SubmitButton.grid_forget()
         self.CancelButton.grid_forget()
         
-    def back(self, mainpage):
+    def back(self):
         self.forget()
-        mainpage.initialize()
+        self.mainpage.initialize()
         
 class ChangeBookInfoPage:
-    def __init__(self, root, db):
+    def __init__(self, mainpage, root, db):
+        self.mainpage=mainpage
         self.root=root
         self.db=db
         
     def declare(self):
-        self.greeting=Label(self.root, text="Enter book name")
-    
+        self.greeting=Label(self.root, text="Change Book Details")
+        self.info=Label(self.root, text="Enter Book Code", anchor=tkt.W)
+        self.bcode=LabelEntryPair(self.root, "Book Code:")
+        self.fetchButton=Button(self.root, text="Fetch", command=self.fetch)
+        self.cancelButton=Button(self.root, text="Cancel", command=self.back)
+        self.stage=1
+        self.bookdetails=None
+        
+        self.frame=LabelFrame(self.root, text="Book details")
+        self.details=[None,
+        LabelEntryPair(self.frame, "Book Name:"),
+        LabelEntryPair(self.frame, "Author:"),
+        LabelEntryPair(self.frame, "Publisher:"),
+        LabelEntryPair(self.frame, "Price:"),
+        LabelEntryPair(self.frame, "Shelf Code:"),
+        LabelEntryPair(self.frame, "Total Copies:")
+        ]
+        self.updateButton=Button(self.root, text="Update", command=self.update)
+
+        
+    def initialize(self):
+        self.greeting.grid(row=0, column=0, columnspan=2)
+        self.info.grid(row=1, column=0, columnspan=2)
+        self.bcode.grid(2)
+        self.fetchButton.grid(row=3, column=0)
+        self.cancelButton.grid(row=3, column=1)
+        
+    def fetch(self):
+        bcode=self.bcode.get()
+        self.bookdetails, tbl=lf.selectfn(self.db, 'book b,copies c', 2, bcode)
+        self.bookdetails=self.bookdetails[0]
+        print(self.bookdetails)
+        if(type(self.bookdetails)==str):
+            tkt.messagebox.showerror(title="Book not found",message=self.bookdetails)
+        else:
+            self.display()
+            
+    def display(self):
+        self.forget()
+        self.stage=2
+        self.frame.grid(row=1, column=0, columnspan=2)
+        self.updateButton.grid(row=2, column=0)
+        self.cancelButton.grid(row=2, column=1)
+        
+        self.details[0]=LabelEntryPair(self.frame, "Book Code:")
+        for i in range(len(self.details)):
+            self.details[i].grid(i)
+            self.details[i].set(self.bookdetails[i])
+        
+        
+    def update(self):
+        changes={}
+        cols=["BCODE","BNAME","AUTHOR","PUBL","PRICE","SLF","TCP"]
+        code=self.bookdetails[0]
+        for i in range(len(self.details)):
+            temp=self.details[i].get()
+            if temp!=self.bookdetails[i]:
+                changes[cols[i]]=temp
+        stat=lf.changedata(self.db, changes, code)
+        if stat:
+            tkt.messagebox.showinfo(title='Success', message="Book Updated Successfully!!!")
+            self.back()
+        else:
+            tkt.messagebox.showerror(title="Error", message="Some error Occured!!\nTry Again")
+        
+    def back(self):
+        self.forget()
+        if self.mainpage:
+            self.mainpage.initialize()
+        
+    def forget(self):
+        if self.stage==1:
+            self.info.grid_forget()
+            self.bcode.forget()
+            self.fetchButton.grid_forget()
+        else:
+            self.frame.grid_forget()
+            self.greeting.grid_forget()
+            self.updateButton.grid_forget()
+        self.cancelButton.grid_forget()
         
 class LendReturnBookPage:
     def __init__(self, root, db):
@@ -144,7 +226,8 @@ if __name__=='__main__':
     from basicclasses import Database
     db=Database(host='localhost',user='root',passwd='14061703', database="library")
     root=tkt.Tk()
-    sample=SearchBookPage(root, db)
+    sample=ChangeBookInfoPage(None, root, db)
+    sample.declare()
     sample.initialize()
     root.mainloop()
     db.close()

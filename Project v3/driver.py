@@ -24,12 +24,13 @@ if not user:
 librarydb=bc.Database(host='localhost',user='root',passwd='14061703', database='library')
 #Member login 
 mainpage=mp.MainMenuPage(user, librarydb)
-pagedeclns=[lambda: pd.caprocess(mainpage.root, logindb),
-            lambda: pd.searchbookprocess(mainpage, mainpage.root, librarydb),
+pagedeclns=[lambda: pd.searchbookprocess(mainpage, mainpage.root, librarydb),
             lambda: pd.changeaccdetprocess(mainpage.root, logindb, user),
             lambda: pd.changepasswordprocess(mainpage.root, logindb, user)]
 if user.lgtp==2:
-    pagedeclns.extend([lambda: pd.insertbookprocess(mainpage, mainpage.root, librarydb)])
+    pagedeclns.extend([lambda: pd.caprocess(mainpage.root, logindb),
+                       lambda: pd.insertbookprocess(mainpage, mainpage.root, librarydb),
+                       lambda: pd.changebookinfoprocess(mainpage, mainpage.root, librarydb)])
 mainpage.declare(pagedeclns)
 mainpage.initialize()
 mainpage.start()

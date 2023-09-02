@@ -17,11 +17,11 @@ class MainMenuPage:
     def declare(self, lst):
         self.Label=Label(self.root, text="Main Page")
         self.frame=LabelFrame(self.root)
-        self.ChangeADButton=Button(self.root, text="Change Account Details", command=lst[2])
-        self.ChangePasswordButton=Button(self.root, text="Change Password", command=lst[3])
+        self.ChangeADButton=Button(self.root, text="Change Account Details", command=lst[1])
+        self.ChangePasswordButton=Button(self.root, text="Change Password", command=lst[2])
         self.LogoutButton=Button(self.root, text="Logout", command=self.logout)
         
-        self.SearchBookButton=Button(self.frame, text="Search a Book", command=lst[1])
+        self.SearchBookButton=Button(self.frame, text="Search a Book", command=lst[0])
         self.RequestBookButton=Button(self.frame,text="Request a Book")
         self.RenewBookButton=Button(self.frame, text="Renew a Book")
         self.ReturnBookButton=Button(self.frame, text="Return a Book")
@@ -29,8 +29,8 @@ class MainMenuPage:
         if self.ui.lgtp==2:
             self.RequestBookButton=Button(self.frame, text="Lend a Book")
             self.InsertBookButton=Button(self.frame, text="Insert a New Book", command=lst[4])
-            self.ChangeBDButton=Button(self.frame, text="Change a Book Data")
-            self.CreateNewMemberButton=Button(self.frame, text="Create a New Member Account", command=lst[0])
+            self.ChangeBDButton=Button(self.frame, text="Change a Book Data", command=lst[5])
+            self.CreateNewMemberButton=Button(self.frame, text="Create a New Member Account", command=lst[3])
         
     
     def initialize(self):
